@@ -1,7 +1,7 @@
 var http = require('http');
 var io = require('socket.io-client')
 var Stream = require('stream').Transform
-var hub = io('http://localhost:5000', {path: '/connection_session'});
+var hub = io(process.argv[2] || 'http://localhost:3000', {path: '/connection_session'});
 
 hub.on('request', async (req, response_cb) => {
     console.log(req.method + ' ' + req.url);

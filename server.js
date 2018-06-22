@@ -1,7 +1,7 @@
 const http = require('http');
 const io = require('socket.io')
-var hostname = "erp.itsc.ec"
-var port = 8088;
+var hostname = process.argv[2] || "localhost"
+var port = process.argv[3] || 3001
 var io_conn = null; //Server GET
 var client = null; //cliente GET
 
