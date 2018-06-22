@@ -1,6 +1,7 @@
 const http = require('http');
 const io = require('socket.io')
-
+var hostname = "erp.itsc.ec"
+var port = 8088;
 var io_conn = null; //Server GET
 var client = null; //cliente GET
 
@@ -23,7 +24,7 @@ var server = http.createServer(function (req, resp) {
 	.on('data', chunk => payload.push(chunk))
 	.on('end', () => {
 
-		client.emit('request', { method, url, headers, data: Buffer.concat(payload) }, response => {
+		client.emit('request', { hostname, port, method, url, headers, data: Buffer.concat(payload) }, response => {
 			let { statusCode, headers, body } = response
 
 			resp.statusCode = statusCode;
