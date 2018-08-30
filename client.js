@@ -1,7 +1,11 @@
 var http = require('http');
 var io = require('socket.io-client')
 var Stream = require('stream').Transform
-var hub = io(process.argv[2] || 'http://localhost:3000', {path: '/connection_session'});
+
+var proxy_server = process.argv[2]
+if (!proxy_server) throw Error(`Proxy server not defined: ${proxy_server}`)
+
+var hub = io(proxy_server, {path: '/connection_session'});
 
 hub.on('request', async (req, response_cb) => {
     console.log(req.method + ' ' + req.url);
