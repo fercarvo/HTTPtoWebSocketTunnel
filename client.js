@@ -1,6 +1,6 @@
-var http = require('http');
-var io = require('socket.io-client')
-var Stream = require('stream').Transform
+var http    = require('http');
+var io      = require('socket.io-client')
+var Stream  = require('stream').Transform
 
 var proxy_server = process.argv[2]
 if (!proxy_server) throw Error(`Proxy server not defined: ${proxy_server}`)
@@ -8,10 +8,13 @@ if (!proxy_server) throw Error(`Proxy server not defined: ${proxy_server}`)
 var hub = io(proxy_server, {path: '/connection_session'});
 
 hub.on('request', async (req, response_cb) => {
-    console.log(req.method + ' ' + req.url);
+    //console.log(req.method + ' ' + req.url);
     var data = await ajax(req.hostname, req.port, req.url, req.method, req.headers, req.data)
     response_cb(data)
 })
+
+hub.on('connect', () => console.log(`This <-----> ${proxy_server} [${new Date().toLocaleString()}]`))
+hub.on('disconnect', () => console.log(`This <-   -> ${proxy_server} [${new Date().toLocaleString()}]`))
 
 function ajax (hostname, port, path, method, headers, data) {
     const options = { hostname, port, path, method, headers }
