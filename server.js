@@ -55,6 +55,8 @@ var server = http.createServer(function (req, resp) {
 
 	const { headers, method, url } = req;	
 	var payload = [];
+	
+	headers['host'] = `${back_hostname}:${back_port}`;
 
 	req.on('error', (err) => {
 		console.error(err);
