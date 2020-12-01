@@ -11,6 +11,8 @@ var back_port 		= undefined
 /** This server Port */
 var server_port 	= undefined
 
+var https		= undefined
+
 for (var i = 2; i < process.argv.length; i++) {
 	let arg 		= process.argv[i].split('=')
 	let arg_name 	= arg[0] 
@@ -27,6 +29,9 @@ for (var i = 2; i < process.argv.length; i++) {
 		case 'back_port':
 			back_port = arg_value;
 			break;
+		case 'https':
+			https = arg_value;
+			break;
 		default:
 		  	console.error("Wrong argument " + arg);
 	}
@@ -34,6 +39,8 @@ for (var i = 2; i < process.argv.length; i++) {
 
 if (!back_hostname || !back_port)
 	throw new Error(`back_hostname:${back_hostname} or back_port:${back_port} are not defined`);
+if (https !== undefined)
+	https = true;
 
 /** Si existe la variable de ambiente PORT, se sobreescribe */	
 if (process.env.PORT)
@@ -57,7 +64,7 @@ var server = http.createServer(function (req, resp) {
 	.on('data', chunk => payload.push(chunk))
 	.on('end', () => {
 
-		client.emit('request', { hostname: back_hostname, port: back_port, method, url, headers, data: Buffer.concat(payload) }, response => {
+		client.emit('request', { hostname: back_hostname, port: back_port, method, url, headers, data: Buffer.concat(payload), https }, response => {
 			let { statusCode, headers, body } = response
 
 			resp.statusCode = statusCode;
